@@ -1,0 +1,4 @@
+gitProvider: githublsilvapvt
+artifactory: artifactorylucianos
+repoPath: lsilvapvt/jfrog-pipelines-maven-helloworld
+deployerRepo: default-maven-local
