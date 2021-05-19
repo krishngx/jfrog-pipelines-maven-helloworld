@@ -3,4 +3,4 @@ artifactory: artifactorylucianos
 repoPath: lsilvapvt/jfrog-pipelines-maven-helloworld
 deployerRepo: default-maven-local
 resolverRepo: default-maven-virtual
-sourceLocation: src/.
+sourceLocation: .
