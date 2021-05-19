@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.1.0 http://maven.apache.org/xsd/settings-1.1.0.xsd" xmlns="http://maven.apache.org/SETTINGS/1.1.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <servers>
+    <!-- ... generated from the "Set Me Up" option on the Maven repository user interface in Artifactory  -->
+  </servers>
+  <profiles>
+    <profile>
+      <repositories>
+        <repository>
+          <snapshots>
+            <enabled>false</enabled>
+          </snapshots>
+          <id>central</id>
+          <name>default-maven-virtual</name>
+          <url>https://YOUR_ARTIFACTORY_URL/artifactory/default-maven-virtual</url>
+        </repository>
+        <repository>
+          <snapshots />
+          <id>snapshots</id>
+          <name>default-maven-virtual</name>
+          <url>https://YOUR_ARTIFACTORY_URL/artifactory/default-maven-virtual</url>
+        </repository>
+      </repositories>
+      <pluginRepositories>
+        <pluginRepository>
+          <snapshots>
+            <enabled>false</enabled>
+          </snapshots>
+          <id>central</id>
+          <name>default-maven-virtual</name>
+          <url>https://YOUR_ARTIFACTORY_URL/artifactory/default-maven-virtual</url>
+        </pluginRepository>
+        <pluginRepository>
+          <snapshots />
+          <id>snapshots</id>
+          <name>default-maven-virtual</name>
+          <url>https://YOUR_ARTIFACTORY_URL/artifactory/default-maven-virtual</url>
+        </pluginRepository>
+      </pluginRepositories>
+      <id>artifactory</id>
+    </profile>
+    <profile>
+        <id>artifactory-plugin-properties</id>
+        <properties>
+            <url>https://YOUR_ARTIFACTORY_URL/artifactory</url>
+            <username>YOUR_ARTIFACTORY_USER_ID</username>
+            <password>YOUR_ARTIFACTORY_USER_PASSWORD_ENCRYPTED</password>
+        </properties>
+    </profile>
+  </profiles>
+  <activeProfiles>
+    <activeProfile>artifactory</activeProfile>
+    <activeProfile>artifactory-plugin-properties</activeProfile>
+  </activeProfiles>
+</settings>

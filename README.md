@@ -25,4 +25,3 @@ For detailed instructions on how to setup a JFrog pipeline, as well as explanati
 6. Once the new pipeline source is successfully resolved, go to "Pipelines > My Pipelines" in Artifactory and click on your pipeline's name, which is ready to be executed.
 
 ---
-
