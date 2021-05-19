@@ -1,6 +1,7 @@
-gitProvider: githublsilvapvt
-artifactory: artifactorylucianos
-repoPath: lsilvapvt/jfrog-pipelines-maven-helloworld
-deployerRepo: default-maven-local
-resolverRepo: default-maven-virtual
-sourceLocation: .
+pipelineName: demo_maven_helloworld  # name of your pipeline
+gitProvider: githublsilvapvt         # the ID o the github integration instance in Artifactory
+artifactory: artifactorylucianos     # the ID o the artifactory server instance in Artifactory
+repoPath: lsilvapvt/jfrog-pipelines-maven-helloworld   # the reference to this git repository
+deployerRepo: default-maven-local    # the Maven local repository to write to in Artifactory
+resolverRepo: default-maven-virtual  # the Maven virtual repository to resolve from in Artifactory
+sourceLocation: .                    # the location of the source code, current root folder in this sample

@@ -14,7 +14,7 @@ resources:
       sourceArtifactory: {{ .Values.artifactory }}
 
 pipelines:
-  - name: demo_maven_helloworld
+  - name: {{ .Values.pipelineName }}
     steps:
       - name: mvn_build_step
         type: MvnBuild
