@@ -18,4 +18,4 @@ jobs:
           # Collect VCS details from git and add them to the build
           jfrog rt bag
           # Publish build info
-          jfrog rt bp 
+          jfrog rt bp --project shire 
