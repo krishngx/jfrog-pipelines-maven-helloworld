@@ -14,6 +14,7 @@ jobs:
       - name: Run JFrog CLI
         run: |
           export JFROG_CLI_BUILD_PROJECT=shire
+          jfrog --version
           jfrog rt ping 
           # Collect environment variables for the build
           jfrog rt bce
