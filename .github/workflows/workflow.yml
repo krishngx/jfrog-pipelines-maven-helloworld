@@ -100,8 +100,19 @@ jobs:
           # Run tests
           echo "Your tests go here. Success!"
 
+  approval-gate:
+    needs: tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Tests
+        run: |
+          # Run tests
+          echo "Your approval gate process goes here. Aproved!"
+
   promote-to-non-prod:
-    needs: test
+    needs: approval-gate
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -113,5 +124,5 @@ jobs:
       - name: Promote Build
         run: |
           echo "Promote docker image: Build Name [$JFROG_CLI_BUILD_NAME] , Build Number [$JFROG_CLI_BUILD_NUMBER] "
-          # Check version of Artifactory
-          jfrog --version
+          # Promote build to production and adds appropriate properties to artifacts
+          jfrog rt bpr ${JFROG_CLI_BUILD_NAME} ${JFROG_CLI_BUILD_NUMBER} shire-docker-prod --props=tested=true
