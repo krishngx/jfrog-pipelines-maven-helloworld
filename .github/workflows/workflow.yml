@@ -15,6 +15,7 @@ jobs:
         uses: jfrog/setup-jfrog-cli@v1
         env:
           JF_ARTIFACTORY_SERVER: ${{ secrets.JF_ARTIFACTORY_SERVER_1 }}
+          JFROG_CLI_BUILD_PROJECT: "shire"
       - name: Check-JFrog-CLI-and-Artifactory-Server
         run: |
           # Check version of Artifactory
@@ -24,8 +25,6 @@ jobs:
 
       - name: Publish-Build-Info-to-Artifactory
         run: |
-          # Set Artifactory Project scope
-          export JFROG_CLI_BUILD_PROJECT: "shire"
           echo "Publish build: Project [$JFROG_CLI_BUILD_PROJECT] , Build Name [$JFROG_CLI_BUILD_NAME] , Build Number [$JFROG_CLI_BUILD_NUMBER] "
           ls -la 
           # Collect environment variables for the build
@@ -74,7 +73,7 @@ jobs:
           push: false
           tags: lucianos.jfrog.io/shire-docker-dev/myapp:latest
 
-      - name: Publish-Build-Info-to-Artifactory
+      # - name: Publish-Build-Info-to-Artifactory
         run: |
           echo "Push Docker image: Build Name [$JFROG_CLI_BUILD_NAME] , Build Number [$JFROG_CLI_BUILD_NUMBER] "
           # Collect environment variables for the build
