@@ -2,12 +2,11 @@ name: "myapp-gha-workflow"
 on: push
 
 env:
-  JFROG_CLI_BUILD_PROJECT: "shire"
   JFROG_CLI_BUILD_NAME: "myapp-gha-workflow"
   JFROG_CLI_BUILD_NUMBER: "${{ github.run_number }}"
 
 jobs:
-  build:
+  build-project:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -23,15 +22,10 @@ jobs:
           # Check Artifactory Server connectiviy with a CLI Ping
           jfrog rt ping 
 
-      - name: Zip-files
-        uses: papeloto/action-zip@v1
-        with:
-          files: src/
-          dest: myapp.zip
-          
       - name: Publish-Build-Info-to-Artifactory
         run: |
           # Set Artifactory Project scope
+          export JFROG_CLI_BUILD_PROJECT: "shire"
           echo "Publish build: Project [$JFROG_CLI_BUILD_PROJECT] , Build Name [$JFROG_CLI_BUILD_NAME] , Build Number [$JFROG_CLI_BUILD_NUMBER] "
           ls -la 
           # Collect environment variables for the build
@@ -41,8 +35,59 @@ jobs:
           # Publish build info
           jfrog rt bp          
 
-  test:
-    needs: build
+build-docker:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Setup JFrog CLI
+        uses: jfrog/setup-jfrog-cli@v1
+        env:
+          JF_ARTIFACTORY_SERVER: ${{ secrets.JF_ARTIFACTORY_SERVER_2 }}
+      - name: Check-JFrog-CLI-and-Artifactory-Server
+        run: |
+          # Check version of Artifactory
+          jfrog --version
+          # Check Artifactory Server connectiviy with a CLI Ping
+          jfrog rt ping 
+
+      - name: Login to Docker Registry
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.ARTIFACTORY_DOCKER_USERNAME }}
+          password: ${{ secrets.ARTIFACTORY_DOCKER_APIKEY }}
+          registry: lucianos.jfrog.io
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+        with:
+          driver-opts: network=host
+
+      - name: Build and push to local registry
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: ./Dockerfile
+          push: false
+          tags: lucianos.jfrog.io/shire-docker-dev/myapp:latest
+
+      - name: Publish-Build-Info-to-Artifactory
+        run: |
+          echo "Push Docker image: Build Name [$JFROG_CLI_BUILD_NAME] , Build Number [$JFROG_CLI_BUILD_NUMBER] "
+          # Collect environment variables for the build
+          jfrog rt bce
+          # Collect VCS details from git and add them to the build
+          jfrog rt bag
+          # Push docker image to Artifactory
+          jfrog rt dp lucianos.jfrog.io/shire-docker-dev/myapp:latest shire-docker-dev
+          # Publish build info
+          jfrog rt bp      
+
+          test:
+    needs: build-docker
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -50,7 +95,7 @@ jobs:
       - name: Tests
         run: |
           # Run tests
-          echo "Your tests go here"
+          echo "Your tests go here. Success!"
 
   promote-to-non-prod:
     needs: test
@@ -64,6 +109,6 @@ jobs:
           JF_ARTIFACTORY_SERVER: ${{ secrets.JF_ARTIFACTORY_SERVER_1 }}
       - name: Promote Build
         run: |
-          echo "Promote build: Project [$JFROG_CLI_BUILD_PROJECT] , Build Name [$JFROG_CLI_BUILD_NAME] , Build Number [$JFROG_CLI_BUILD_NUMBER] "
+          echo "Promote docker image: Build Name [$JFROG_CLI_BUILD_NAME] , Build Number [$JFROG_CLI_BUILD_NUMBER] "
           # Check version of Artifactory
           jfrog --version
