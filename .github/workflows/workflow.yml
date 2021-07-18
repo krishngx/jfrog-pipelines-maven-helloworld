@@ -111,7 +111,7 @@ jobs:
           # Run tests
           echo "Your approval gate process goes here. Aproved!"
 
-  promote-to-non-prod:
+  promote-to-prod:
     needs: approval-gate
     runs-on: ubuntu-latest
     steps:
@@ -120,7 +120,7 @@ jobs:
       - name: Setup JFrog CLI
         uses: jfrog/setup-jfrog-cli@v1
         env:
-          JF_ARTIFACTORY_SERVER: ${{ secrets.JF_ARTIFACTORY_SERVER_1 }}
+          JF_ARTIFACTORY_SERVER: ${{ secrets.JF_ARTIFACTORY_SERVER_2 }}
       - name: Promote Build
         run: |
           echo "Promote docker image: Build Name [$JFROG_CLI_BUILD_NAME] , Build Number [$JFROG_CLI_BUILD_NUMBER] "
