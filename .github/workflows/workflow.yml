@@ -57,14 +57,15 @@ jobs:
           password: ${{ secrets.ARTIFACTORY_DOCKER_APIKEY }}
           registry: lucianos.jfrog.io
 
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v1
+      # - name: Set up QEMU
+      #   uses: docker/setup-qemu-action@v1
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
-        with:
-          driver-opts: network=host
+      # - name: Set up Docker Buildx
+      #   uses: docker/setup-buildx-action@v1
+      #   with:
+      #     driver-opts: network=host
 
+    
       - name: Build and push to local registry
         uses: docker/build-push-action@v2
         with:
@@ -72,6 +73,9 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: lucianos.jfrog.io/shire-docker-dev/myapp:${{ github.run_number }}
+
+      - name: Image digest
+        run: echo ${{ steps.docker_build.outputs.digest }}
 
       - name: Publish-Build-Info-to-Artifactory
         run: |
