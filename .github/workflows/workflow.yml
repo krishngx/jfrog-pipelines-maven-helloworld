@@ -35,6 +35,7 @@ jobs:
           jfrog rt bp          
 
   test:
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -45,6 +46,7 @@ jobs:
           echo "Your tests go here"
 
   promote:
+    needs: test
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
