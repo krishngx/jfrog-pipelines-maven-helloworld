@@ -1,5 +1,10 @@
-name: "JFrog CLI Example"
+name: "myapp-gha-workflow"
 on: push
+
+env:
+  JFROG_CLI_BUILD_PROJECT: "shire"
+  JFROG_CLI_BUILD_NAME: "myapp-gha-workflow"
+  JFROG_CLI_BUILD_NUMBER: "${{ github.run_number }}"
 
 jobs:
   build:
@@ -11,14 +16,45 @@ jobs:
         uses: jfrog/setup-jfrog-cli@v1
         env:
           JF_ARTIFACTORY_SERVER: ${{ secrets.JF_ARTIFACTORY_SERVER_1 }}
-      - name: Run JFrog CLI
+      - name: Check-JFrog-CLI-and-Artifactory-Server
         run: |
-          export JFROG_CLI_BUILD_PROJECT=shire
+          # Check version of Artifactory
           jfrog --version
+          # Check Artifactory Server connectiviy with a CLI Ping
           jfrog rt ping 
+
+      - name: Publish-Build-Info-to-Artifactory
+        run: |
+          # Set Artifactory Project scope
+          echo "Publish build: Project [$JFROG_CLI_BUILD_PROJECT] , Build Name [$JFROG_CLI_BUILD_NAME] , Build Number [$JFROG_CLI_BUILD_NUMBER] "
           # Collect environment variables for the build
           jfrog rt bce
           # Collect VCS details from git and add them to the build
           jfrog rt bag
           # Publish build info
-          jfrog rt bp
+          jfrog rt bp          
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Tests
+        run: |
+          # Run tests
+          echo "Your tests go here"
+
+  promote:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Setup JFrog CLI
+        uses: jfrog/setup-jfrog-cli@v1
+        env:
+          JF_ARTIFACTORY_SERVER: ${{ secrets.JF_ARTIFACTORY_SERVER_1 }}
+      - name: Promote Build
+        run: |
+          echo "Promote build: Project [$JFROG_CLI_BUILD_PROJECT] , Build Name [$JFROG_CLI_BUILD_NAME] , Build Number [$JFROG_CLI_BUILD_NUMBER] "
+          # Check version of Artifactory
+          jfrog --version
