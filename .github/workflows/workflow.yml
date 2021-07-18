@@ -86,7 +86,7 @@ jobs:
           # Publish build info
           jfrog rt bp      
 
-          test:
+  test:
     needs: build-docker
     runs-on: ubuntu-latest
     steps:
