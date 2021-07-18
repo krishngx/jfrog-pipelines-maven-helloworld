@@ -35,7 +35,7 @@ jobs:
           # Publish build info
           jfrog rt bp          
 
-build-docker:
+  build-docker:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
