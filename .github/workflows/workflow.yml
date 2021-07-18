@@ -101,7 +101,7 @@ jobs:
           echo "Your tests go here. Success!"
 
   approval-gate:
-    needs: tests
+    needs: test
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
