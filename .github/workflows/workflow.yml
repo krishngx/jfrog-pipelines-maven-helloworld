@@ -70,10 +70,10 @@ jobs:
         with:
           context: .
           file: ./Dockerfile
-          push: false
-          tags: lucianos.jfrog.io/shire-docker-dev/myapp:latest
+          push: true
+          tags: lucianos.jfrog.io/shire-docker-dev/myapp:$JFROG_CLI_BUILD_NUMBER
 
-      # - name: Publish-Build-Info-to-Artifactory
+      - name: Publish-Build-Info-to-Artifactory
         run: |
           echo "Push Docker image: Build Name [$JFROG_CLI_BUILD_NAME] , Build Number [$JFROG_CLI_BUILD_NUMBER] "
           # Collect environment variables for the build
@@ -81,7 +81,7 @@ jobs:
           # Collect VCS details from git and add them to the build
           jfrog rt bag
           # Push docker image to Artifactory
-          jfrog rt dp lucianos.jfrog.io/shire-docker-dev/myapp:latest shire-docker-dev
+          jfrog rt dp lucianos.jfrog.io/shire-docker-dev/myapp:$JFROG_CLI_BUILD_NUMBER shire-docker-dev
           # Publish build info
           jfrog rt bp      
 
